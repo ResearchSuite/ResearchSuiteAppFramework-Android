@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2'
 
 android {
     compileSdkVersion 24
     buildToolsVersion '25.0.0'
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -24,11 +24,11 @@ android {
 
 ext {
     bintrayRepo = 'ResearchSuiteAppFramework'
-    bintrayName = 'ResearchSuiteTaskBuilder'
+    bintrayName = 'researchsuitetaskbuilder'
 
     publishedGroupId = 'edu.cornell.tech.foundry'
     libraryName = 'researchsuitetaskbuilder'
-    artifact = 'researchsuitetaskbuilder'
+    artifactName = 'researchsuitetaskbuilder'
 
     libraryDescription = 'The ResearchSuite Task Builder is an easy and extensible way to create Tasks for ResearchStack.'
 
@@ -69,7 +69,7 @@ install {
             project {
                 packaging 'aar'
                 groupId publishedGroupId
-                artifactId artifact
+                artifactId artifactName
 
                 // Add your description here
                 name libraryName
@@ -147,6 +147,12 @@ bintray {
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = allLicenses
+        dryRun = false
         publish = true
     }
+
+
+
+
+
 }
