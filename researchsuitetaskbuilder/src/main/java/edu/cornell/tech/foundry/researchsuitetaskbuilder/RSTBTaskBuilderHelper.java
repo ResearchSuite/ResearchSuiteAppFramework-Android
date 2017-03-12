@@ -29,6 +29,15 @@ public class RSTBTaskBuilderHelper {
     private Gson gson;
     private JsonParser jsonParser;
     private RSTBStateHelper stateHelper;
+    private int defaultResourceType;
+
+    public int getDefaultResourceType() {
+        return defaultResourceType;
+    }
+
+    public void setDefaultResourceType(int defaultResourceType) {
+        this.defaultResourceType = defaultResourceType;
+    }
 
     RSTBTaskBuilderHelper(Context context, ResourceManager resourceManager, RSTBStateHelper stateHelper) {
         super();
@@ -37,6 +46,7 @@ public class RSTBTaskBuilderHelper {
         this.gson = new Gson();
         this.jsonParser = new JsonParser();
         this.stateHelper = stateHelper;
+        this.defaultResourceType = ResourcePathManager.Resource.TYPE_JSON;
     }
 
     public Context getContext() {
@@ -51,10 +61,14 @@ public class RSTBTaskBuilderHelper {
         return this.gson;
     }
 
+    public String pathForFilename(String filename, int resourceType) {
+        return this.resourceManager.generatePath(resourceType, filename);
+    }
+
     //utilities
     @Nullable
-    public JsonElement getJsonElementForFilename(String filename) {
-        String jsonPath = this.resourceManager.generatePath(ResourcePathManager.Resource.TYPE_JSON, filename);
+    public JsonElement getJsonElementForFilename(String filename, int resourceType) {
+        String jsonPath = this.pathForFilename(filename, resourceType);
         InputStream stream = this.resourceManager.getResouceAsInputStream(this.context, jsonPath);
         Reader reader = null;
         try
@@ -75,6 +89,11 @@ public class RSTBTaskBuilderHelper {
             return null;
         }
         return element;
+    }
+
+    @Nullable
+    public JsonElement getJsonElementForFilename(String filename) {
+        return this.getJsonElementForFilename(filename, this.defaultResourceType);
     }
 
     @Nullable

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-version = '0.0.2'
+version = '0.0.3'
 
 android {
     compileSdkVersion 24
@@ -147,7 +147,7 @@ bintray {
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = allLicenses
-        dryRun = false
+        dryRun = true
         publish = true
     }
 
