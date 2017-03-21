@@ -1,6 +1,8 @@
 package edu.cornell.tech.foundry.researchsuiteresultprocessor;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -10,27 +12,19 @@ public class RSRPIntermediateResult {
 
     private String type;
     private UUID uuid;
+    private String taskIdentifier;
+    private UUID taskRunUUID;
     private Date startDate;
     private Date endDate;
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+    private Map<String, Serializable> userInfo;
+    private Map<String, Object> parameters;
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public RSRPIntermediateResult(String type) {
+    public RSRPIntermediateResult(String type, UUID uuid, String taskIdentifier, UUID taskRunUUID) {
         this.type = type;
-        this.uuid = UUID.randomUUID();
-        this.startDate = new Date();
-        this.endDate = new Date();
-
+        this.uuid = uuid;
+        this.taskIdentifier = taskIdentifier;
+        this.taskRunUUID = taskRunUUID;
     }
 
     public String getType() {
@@ -47,5 +41,37 @@ public class RSRPIntermediateResult {
 
     public Date getEndDate() {
         return endDate;
+    }
+
+    public String getTaskIdentifier() {
+        return taskIdentifier;
+    }
+
+    public UUID getTaskRunUUID() {
+        return taskRunUUID;
+    }
+
+    public Map<String, Serializable> getUserInfo() {
+        return userInfo;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setUserInfo(Map<String, Serializable> userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
     }
 }

@@ -2,10 +2,8 @@ package edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServic
 
 import android.support.annotation.Nullable;
 
-import org.researchstack.backbone.result.StepResult;
-import org.researchstack.backbone.result.TaskResult;
-
 import java.util.Map;
+import java.util.UUID;
 
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPIntermediateResult;
 
@@ -15,7 +13,11 @@ import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPIntermediateRes
 public interface RSRPFrontEnd {
 
     @Nullable
-    public RSRPIntermediateResult transform(Map<String,StepResult> parameters);
+    public RSRPIntermediateResult transform(
+            String taskIdentifier,
+            UUID taskRunUUID,
+            Map<String,Object> parameters);
+
     public boolean supportsType(String type);
 
 }

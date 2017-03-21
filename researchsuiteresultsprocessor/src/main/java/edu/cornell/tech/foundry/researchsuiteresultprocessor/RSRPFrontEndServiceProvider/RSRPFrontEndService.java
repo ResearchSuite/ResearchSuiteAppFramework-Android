@@ -15,11 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.UUID;
 
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServiceProvider.spi.RSRPFrontEnd;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPIntermediateResult;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPResultTransform;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPResultTransformInputMapping;
+
 
 /**
  * Created by jameskizer on 2/2/17.
@@ -40,24 +42,39 @@ public class RSRPFrontEndService {
         return service;
     }
 
-    public List<RSRPIntermediateResult> processResult(TaskResult taskResult, List<RSRPResultTransform> resultTransforms) {
+    public List<RSRPIntermediateResult> processResult(TaskResult taskResult, UUID taskRunUUID, List<RSRPResultTransform> resultTransforms) {
 
         List<RSRPIntermediateResult> intermediateResults = new ArrayList<>();
 
         for (RSRPResultTransform transform : resultTransforms) {
 
-            Map<String, StepResult> selectedResults = new HashMap<String, StepResult>();
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            List<RSRPResultTransformInputMapping> inputMappings = transform.getInputMapping();
 
-            for (RSRPResultTransformInputMapping inputMapping : transform.getInputMapping()) {
 
-                StepResult result = taskResult.getStepResult(inputMapping.getStepIdentifier());
-                if (result != null) {
-                    selectedResults.put(inputMapping.getParameter(), result);
+            for (RSRPResultTransformInputMapping inputMapping : inputMappings) {
+
+                if (inputMapping == null) {
+                    continue;
                 }
 
+                if (inputMapping.getStepIdentifier() != null ) {
+                    StepResult result = taskResult.getStepResult(inputMapping.getStepIdentifier());
+                    if (result != null) {
+                        parameters.put(inputMapping.getParameter(), result);
+                    }
+                }
+                else if (inputMapping.getConstant() != null) {
+                    parameters.put(inputMapping.getParameter(), inputMapping.getConstant());
+                }
             }
 
-            RSRPIntermediateResult intermediateResult = this.transform(transform.getTransform(), selectedResults);
+            RSRPIntermediateResult intermediateResult = this.transform(
+                    transform.getTransform(),
+                    taskResult.getIdentifier(),
+                    taskRunUUID,
+                    parameters);
+
             if (intermediateResult != null) {
                 intermediateResults.add(intermediateResult);
             }
@@ -69,7 +86,10 @@ public class RSRPFrontEndService {
     }
 
     @Nullable
-    private RSRPIntermediateResult transform(String type, Map<String,StepResult> parameters) {
+    private RSRPIntermediateResult transform(String type,
+                                             String taskIdentifier,
+                                             UUID taskRunUUID,
+                                             Map<String,Object> parameters) {
 
         try {
             Iterator<RSRPFrontEnd> frontEnds = this.loader.iterator();
@@ -79,7 +99,7 @@ public class RSRPFrontEndService {
             while (parameters != null && frontEnds.hasNext()) {
                 RSRPFrontEnd frontEnd = frontEnds.next();
                 if (frontEnd.supportsType(type)) {
-                    RSRPIntermediateResult intermediateResult = frontEnd.transform(parameters);
+                    RSRPIntermediateResult intermediateResult = frontEnd.transform(taskIdentifier, taskRunUUID, parameters);
                     if (intermediateResult != null) {
                         return intermediateResult;
                     }

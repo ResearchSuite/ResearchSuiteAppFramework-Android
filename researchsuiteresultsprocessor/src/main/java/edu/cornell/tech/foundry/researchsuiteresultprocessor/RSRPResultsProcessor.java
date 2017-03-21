@@ -7,6 +7,7 @@ import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.result.TaskResult;
 
 import java.util.List;
+import java.util.UUID;
 
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServiceProvider.RSRPFrontEndService;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServiceProvider.spi.RSRPFrontEnd;
@@ -24,8 +25,8 @@ public class RSRPResultsProcessor {
         this.backEnd = backEnd;
     }
 
-    public void processResult(Context context, TaskResult taskResult, List<RSRPResultTransform> resultTransforms) {
-        List<RSRPIntermediateResult> intermediateResults = RSRPFrontEndService.getInstance().processResult(taskResult, resultTransforms);
+    public void processResult(Context context, TaskResult taskResult, UUID taskRunUUID, List<RSRPResultTransform> resultTransforms) {
+        List<RSRPIntermediateResult> intermediateResults = RSRPFrontEndService.getInstance().processResult(taskResult, taskRunUUID, resultTransforms);
         for (RSRPIntermediateResult intermediateResult : intermediateResults) {
             this.backEnd.add(context, intermediateResult);
         }

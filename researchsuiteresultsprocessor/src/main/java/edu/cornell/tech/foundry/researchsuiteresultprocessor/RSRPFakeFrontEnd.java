@@ -1,8 +1,7 @@
 package edu.cornell.tech.foundry.researchsuiteresultprocessor;
 
-import org.researchstack.backbone.result.StepResult;
-
 import java.util.Map;
+import java.util.UUID;
 
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServiceProvider.spi.RSRPFrontEnd;
 
@@ -13,7 +12,10 @@ public class RSRPFakeFrontEnd implements RSRPFrontEnd {
 
 
     @Override
-    public RSRPIntermediateResult transform(Map<String, StepResult> parameters) {
+    public RSRPIntermediateResult transform(
+            String taskIdentifier,
+            UUID taskRunUUID,
+            Map<String, Object> parameters) {
         return null;
     }
 

@@ -5,19 +5,23 @@ package edu.cornell.tech.foundry.researchsuiteresultprocessor;
  */
 public class RSRPResultTransformInputMapping {
 
+    private Object constant;
     private String stepIdentifier;
     private String parameter;
 
-    public RSRPResultTransformInputMapping(String stepIdentifier, String parameter) {
-        this.stepIdentifier = stepIdentifier;
-        this.parameter = parameter;
-    }
+    public RSRPResultTransformInputMapping() {
 
-    public String getStepIdentifier() {
-        return stepIdentifier;
     }
 
     public String getParameter() {
         return parameter;
+    }
+
+    public Object getConstant() {
+        return constant;
+    }
+
+    public String getStepIdentifier() {
+        return stepIdentifier;
     }
 }
