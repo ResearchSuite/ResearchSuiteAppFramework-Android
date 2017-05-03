@@ -6,7 +6,9 @@ import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.step.Step;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceConfigurationError;
@@ -37,23 +39,30 @@ public class RSTBStepGeneratorService {
 
     @Nullable
     public
-    Step generateStep(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
-        Step step = null;
+    List<Step> generateSteps(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
 
         try {
             Iterator<RSTBStepGenerator> stepGenerators = loader.iterator();
-            while (step == null && stepGenerators.hasNext()) {
+            while (stepGenerators.hasNext()) {
                 RSTBStepGenerator stepGenerator = stepGenerators.next();
                 if (stepGenerator.supportsType(type)) {
-                    step = stepGenerator.generateStep(helper, type, jsonObject);
+
+                    List<Step> steps = stepGenerator.generateSteps(helper, type, jsonObject);
+                    if (steps != null) {
+                        return steps;
+                    }
+
+                    Step step = stepGenerator.generateStep(helper, type, jsonObject);
+                    if (step != null) {
+                        return Arrays.asList(step);
+                    }
                 }
             }
         } catch (ServiceConfigurationError serviceError) {
-            step = null;
             serviceError.printStackTrace();
+            return null;
         }
-
-        return step;
+        return null;
     }
 
 

@@ -9,9 +9,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.step.Step;
-//import org.researchstack.backbone.ui.step.body.StepBody;
-import org.researchstack.skin.ResourceManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +32,8 @@ public class RSTBTaskBuilder {
     private RSTBTaskBuilderHelper stepBuilderHelper;
     private Context context;
 
-    public RSTBTaskBuilder(Context context, ResourceManager resourceManager, RSTBStateHelper stateHelper) {
-        this.stepBuilderHelper = new RSTBTaskBuilderHelper(context, resourceManager, stateHelper);
+    public RSTBTaskBuilder(Context context, ResourcePathManager resourcePathManager, RSTBStateHelper stateHelper) {
+        this.stepBuilderHelper = new RSTBTaskBuilderHelper(context, resourcePathManager, stateHelper);
     }
 
     @Nullable
@@ -96,9 +95,9 @@ public class RSTBTaskBuilder {
 
         }
         else {
-            Step step = this.createStepForObject(type, element);
-            if (step != null) {
-                return Arrays.asList(step);
+            List<Step> steps = this.createStepsForObject(type, element);
+            if (steps != null) {
+                return steps;
             }
             else {
                 return null;
@@ -141,9 +140,9 @@ public class RSTBTaskBuilder {
 
     @Nullable
     protected
-    Step createStepForObject(String type, JsonObject jsonObject) {
+    List<Step> createStepsForObject(String type, JsonObject jsonObject) {
         RSTBStepGeneratorService stepGenerator = RSTBStepGeneratorService.getInstance();
-        return stepGenerator.generateStep(this.stepBuilderHelper, type, jsonObject);
+        return stepGenerator.generateSteps(this.stepBuilderHelper, type, jsonObject);
     }
 
 

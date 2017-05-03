@@ -1,5 +1,7 @@
 package edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStepGeneratorServiceProvider.spi;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.step.Step;
@@ -12,7 +14,12 @@ import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilderHelper;
  * Created by jameskizer on 12/6/16.
  */
 public interface RSTBStepGenerator {
+    @Deprecated
+    @Nullable
     Step generateStep(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject);
+
+    @Nullable
+    List<Step> generateSteps(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject);
     boolean supportsType(String type);
     List<String> supportedStepTypes();
 }

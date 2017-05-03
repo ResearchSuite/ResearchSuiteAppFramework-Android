@@ -1,9 +1,11 @@
 package edu.cornell.tech.foundry.researchsuiteresultprocessor;
 
+import java.io.Serializable;
+
 /**
  * Created by jameskizer on 2/2/17.
  */
-public class RSRPResultTransformInputMapping {
+public class RSRPResultTransformInputMapping implements Serializable {
 
     private Object constant;
     private String stepIdentifier;

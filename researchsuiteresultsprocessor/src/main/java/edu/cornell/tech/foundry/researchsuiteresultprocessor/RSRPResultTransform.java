@@ -1,11 +1,12 @@
 package edu.cornell.tech.foundry.researchsuiteresultprocessor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by jameskizer on 2/2/17.
  */
-public class RSRPResultTransform {
+public class RSRPResultTransform implements Serializable {
 
     private String transform;
     private List<RSRPResultTransformInputMapping> inputMapping;

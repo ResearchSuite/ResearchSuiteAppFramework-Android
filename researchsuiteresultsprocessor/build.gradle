@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-version = '0.0.3'
+version = '0.0.4'
 
 android {
     compileSdkVersion 24
@@ -62,7 +62,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'org.researchstack:backbone:1.1.1-SNAPSHOT'
+    compile 'org.researchstack:backbone:1.1.1'
 }
 
 group = publishedGroupId                               // Maven Group ID for the artifact

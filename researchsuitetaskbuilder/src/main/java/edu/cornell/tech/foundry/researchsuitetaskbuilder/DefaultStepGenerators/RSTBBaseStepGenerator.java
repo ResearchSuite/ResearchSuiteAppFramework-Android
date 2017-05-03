@@ -1,5 +1,7 @@
 package edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.step.Step;
@@ -12,7 +14,7 @@ import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStepGeneratorServic
 /**
  * Created by jameskizer on 12/6/16.
  */
-public abstract class RSTBBaseStepGenerator implements RSTBStepGenerator {
+public class RSTBBaseStepGenerator implements RSTBStepGenerator {
     protected List<String> supportedTypes;
 
     public boolean supportsType(String type) {
@@ -23,5 +25,14 @@ public abstract class RSTBBaseStepGenerator implements RSTBStepGenerator {
         return this.supportedTypes;
     }
 
-    public abstract Step generateStep(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject);
+    @Override
+    public Step generateStep(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public List<Step> generateSteps(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
+        return null;
+    }
 }

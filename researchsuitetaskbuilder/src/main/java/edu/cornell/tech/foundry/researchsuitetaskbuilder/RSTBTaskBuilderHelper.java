@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.researchstack.backbone.ResourcePathManager;
-import org.researchstack.skin.ResourceManager;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,7 +24,7 @@ import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.d
 public class RSTBTaskBuilderHelper {
 
     private Context context;
-    private ResourceManager resourceManager;
+    private ResourcePathManager resourcePathManager;
     private Gson gson;
     private JsonParser jsonParser;
     private RSTBStateHelper stateHelper;
@@ -39,10 +38,10 @@ public class RSTBTaskBuilderHelper {
         this.defaultResourceType = defaultResourceType;
     }
 
-    RSTBTaskBuilderHelper(Context context, ResourceManager resourceManager, RSTBStateHelper stateHelper) {
+    RSTBTaskBuilderHelper(Context context, ResourcePathManager resourcePathManager, RSTBStateHelper stateHelper) {
         super();
         this.context = context;
-        this.resourceManager = resourceManager;
+        this.resourcePathManager = resourcePathManager;
         this.gson = new Gson();
         this.jsonParser = new JsonParser();
         this.stateHelper = stateHelper;
@@ -53,8 +52,8 @@ public class RSTBTaskBuilderHelper {
         return this.context;
     }
 
-    public ResourceManager getResourceManager() {
-        return this.resourceManager;
+    public ResourcePathManager getResourcePathManager() {
+        return this.resourcePathManager;
     }
 
     public Gson getGson() {
@@ -62,14 +61,14 @@ public class RSTBTaskBuilderHelper {
     }
 
     public String pathForFilename(String filename, int resourceType) {
-        return this.resourceManager.generatePath(resourceType, filename);
+        return this.resourcePathManager.generatePath(resourceType, filename);
     }
 
     //utilities
     @Nullable
     public JsonElement getJsonElementForFilename(String filename, int resourceType) {
         String jsonPath = this.pathForFilename(filename, resourceType);
-        InputStream stream = this.resourceManager.getResouceAsInputStream(this.context, jsonPath);
+        InputStream stream = this.resourcePathManager.getResouceAsInputStream(this.context, jsonPath);
         Reader reader = null;
         try
         {

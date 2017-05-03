@@ -1,5 +1,6 @@
 package edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -40,6 +41,12 @@ public class RSTBDefaultStepGenerator implements RSTBStepGenerator {
             Log.w(this.TAG, "malformed element: " + jsonObject.getAsString(), e);
             return null;
         }
+    }
+
+    @Nullable
+    @Override
+    public List<Step> generateSteps(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
+        return null;
     }
 
     public boolean supportsType(String type) {

@@ -5,9 +5,7 @@ package edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.
  */
 public class RSTBQuestionStepDescriptor extends RSTBStepDescriptor {
 
-    public String title;
-    public String text;
-    RSTBQuestionStepDescriptor() {
+    public RSTBQuestionStepDescriptor() {
 
     }
 }
