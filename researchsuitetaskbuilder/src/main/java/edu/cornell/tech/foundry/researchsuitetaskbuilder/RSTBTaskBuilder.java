@@ -10,14 +10,24 @@ import com.google.gson.JsonObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.researchstack.backbone.ResourcePathManager;
+import org.researchstack.backbone.model.ConsentDocument;
+import org.researchstack.backbone.model.ConsentSection;
+import org.researchstack.backbone.model.ConsentSignature;
 import org.researchstack.backbone.step.Step;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.descriptors.RSTBElementDescriptor;
+import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBConsent.RSTBConsentDocumentGeneratorService;
+import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBConsent.RSTBConsentSectionGeneratorService;
+import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBConsent.RSTBConsentSignatureGeneratorService;
+import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBConsent.spi.RSTBConsentDocumentGenerator;
+import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBConsent.spi.RSTBConsentSectionGenerator;
+import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBConsent.spi.RSTBConsentSignatureGenerator;
 import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBElementGeneratorServiceProvider.RSTBElementGeneratorService;
 import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStepGeneratorServiceProvider.RSTBStepGeneratorService;
 //import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.descriptors.RSTBElementDescriptor;
@@ -32,8 +42,22 @@ public class RSTBTaskBuilder {
     private RSTBTaskBuilderHelper stepBuilderHelper;
     private Context context;
 
-    public RSTBTaskBuilder(Context context, ResourcePathManager resourcePathManager, RSTBStateHelper stateHelper) {
-        this.stepBuilderHelper = new RSTBTaskBuilderHelper(context, resourcePathManager, stateHelper);
+    private RSTBConsentDocumentGeneratorService consentDocumentGeneratorService;
+    private RSTBConsentSectionGeneratorService consentSectionGeneratorService;
+    private RSTBConsentSignatureGeneratorService consentSignatureGeneratorService;
+
+    public RSTBTaskBuilder(
+            Context context,
+            RSTBResourcePathManager resourcePathManager,
+            RSTBStateHelper stateHelper,
+            List<RSTBConsentDocumentGenerator> consentDocumentGenerators,
+            List<RSTBConsentSectionGenerator> consentSectionGenerators,
+            List<RSTBConsentSignatureGenerator> conentSignatureGenerators
+    ) {
+        this.stepBuilderHelper = new RSTBTaskBuilderHelper(context, resourcePathManager, this, stateHelper);
+        this.consentDocumentGeneratorService = new RSTBConsentDocumentGeneratorService(consentDocumentGenerators);
+        this.consentSectionGeneratorService = new RSTBConsentSectionGeneratorService(consentSectionGenerators);
+        this.consentSignatureGeneratorService = new RSTBConsentSignatureGeneratorService(conentSignatureGenerators);
     }
 
     @Nullable
@@ -150,4 +174,18 @@ public class RSTBTaskBuilder {
         return stepBuilderHelper;
     }
 
+    @Nullable
+    public ConsentDocument generateConsentDocument(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
+        return this.consentDocumentGeneratorService.generate(helper, type, jsonObject);
+    }
+
+    @Nullable
+    public ConsentSection generateConsentSection(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
+        return this.consentSectionGeneratorService.generate(helper, type, jsonObject);
+    }
+
+    @Nullable
+    public ConsentSignature generateConsentSignature(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
+        return this.consentSignatureGeneratorService.generate(helper, type, jsonObject);
+    }
 }

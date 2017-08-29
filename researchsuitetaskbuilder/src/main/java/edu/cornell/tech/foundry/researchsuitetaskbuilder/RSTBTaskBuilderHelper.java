@@ -24,9 +24,10 @@ import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.d
 public class RSTBTaskBuilderHelper {
 
     private Context context;
-    private ResourcePathManager resourcePathManager;
+    private RSTBResourcePathManager resourcePathManager;
     private Gson gson;
     private JsonParser jsonParser;
+    private RSTBTaskBuilder taskBuilder;
     private RSTBStateHelper stateHelper;
     private int defaultResourceType;
 
@@ -38,13 +39,14 @@ public class RSTBTaskBuilderHelper {
         this.defaultResourceType = defaultResourceType;
     }
 
-    RSTBTaskBuilderHelper(Context context, ResourcePathManager resourcePathManager, RSTBStateHelper stateHelper) {
+    RSTBTaskBuilderHelper(Context context, RSTBResourcePathManager resourcePathManager, RSTBTaskBuilder taskBuilder, RSTBStateHelper stateHelper) {
         super();
         this.context = context;
         this.resourcePathManager = resourcePathManager;
         this.gson = new Gson();
         this.jsonParser = new JsonParser();
         this.stateHelper = stateHelper;
+        this.taskBuilder = taskBuilder;
         this.defaultResourceType = ResourcePathManager.Resource.TYPE_JSON;
     }
 
@@ -60,14 +62,14 @@ public class RSTBTaskBuilderHelper {
         return this.gson;
     }
 
-    public String pathForFilename(String filename, int resourceType) {
-        return this.resourcePathManager.generatePath(resourceType, filename);
+    protected String pathForFilename(String filename, String assetDirectoryPath, String extension) {
+        return this.resourcePathManager.generatePath(filename, assetDirectoryPath, extension);
     }
 
     //utilities
     @Nullable
-    public JsonElement getJsonElementForFilename(String filename, int resourceType) {
-        String jsonPath = this.pathForFilename(filename, resourceType);
+    public JsonElement getJsonElementForFilename(String filename) {
+        String jsonPath = this.pathForFilename(filename, "json", "json");
         InputStream stream = this.resourcePathManager.getResouceAsInputStream(this.context, jsonPath);
         Reader reader = null;
         try
@@ -82,6 +84,7 @@ public class RSTBTaskBuilderHelper {
         JsonElement element = null;
         try {
             element = this.jsonParser.parse(reader);
+            reader.close();
         }
         catch(Exception e) {
             Log.w(this.getClass().getSimpleName(), "could not parse json element", e);
@@ -91,9 +94,15 @@ public class RSTBTaskBuilderHelper {
     }
 
     @Nullable
-    public JsonElement getJsonElementForFilename(String filename) {
-        return this.getJsonElementForFilename(filename, this.defaultResourceType);
+    public String getTextForFilename(String filename, String assetType) {
+        String filePath = this.pathForFilename(filename, assetType, assetType);
+        return ResourcePathManager.getResourceAsString(context, filePath);
     }
+
+//    @Nullable
+//    public JsonElement getJsonElementForFilename(String filename) {
+//        return this.getJsonElementForFilename(filename, this.defaultResourceType);
+//    }
 
     @Nullable
     public RSTBCustomStepDescriptor getCustomStepDescriptor(JsonObject jsonObject) {
@@ -113,4 +122,7 @@ public class RSTBTaskBuilderHelper {
         return this.stateHelper;
     }
 
+    public RSTBTaskBuilder getTaskBuilder() {
+        return taskBuilder;
+    }
 }
