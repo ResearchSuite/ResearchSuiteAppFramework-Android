@@ -56,7 +56,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'org.researchstack:backbone:1.1.1'
+
+//    compile 'org.researchstack:backbone:1.1.1'
+    //TODO: Remove dependency on skin
+    compile 'org.researchstack:skin:1.1.1'
     compile 'org.apache.commons:commons-lang3:3.0'
 }
 

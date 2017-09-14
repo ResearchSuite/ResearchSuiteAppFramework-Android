@@ -14,7 +14,7 @@ import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStepGeneratorServic
 /**
  * Created by jameskizer on 12/6/16.
  */
-public class RSTBBaseStepGenerator implements RSTBStepGenerator {
+public abstract class RSTBBaseStepGenerator implements RSTBStepGenerator {
     protected List<String> supportedTypes;
 
     public boolean supportsType(String type) {
@@ -26,6 +26,7 @@ public class RSTBBaseStepGenerator implements RSTBStepGenerator {
     }
 
     @Override
+    @Nullable
     public Step generateStep(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
         return null;
     }
