@@ -1,10 +1,14 @@
 package edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBConsent;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.util.Base64;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.model.ConsentDocument;
 import org.researchstack.backbone.model.ConsentSection;
 import org.researchstack.backbone.model.ConsentSignature;
@@ -47,8 +51,11 @@ public class RSTBInvestigatorConsentSignatureGenerator implements RSTBConsentSig
             return null;
         }
 
+        ResourcePathManager resourcePathManager = helper.getResourcePathManager();
+        byte[] bytes = resourcePathManager.getResourceAsBytes(helper.getContext(), descriptor.signatureImageTitle);
+
         //TODO: need to load image and convert to base64
-        String signatureImage = "";
+        String signatureImage = Base64.encodeToString(bytes, Base64.DEFAULT);
 
         ConsentSignature signature = new ConsentSignature(
                 descriptor.identifier,

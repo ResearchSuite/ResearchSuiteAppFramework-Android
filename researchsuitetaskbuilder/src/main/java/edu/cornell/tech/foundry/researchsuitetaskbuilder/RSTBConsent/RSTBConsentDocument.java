@@ -126,10 +126,92 @@ public class RSTBConsentDocument extends ConsentDocument implements Serializable
     }
 
     //TODO: Fill this in!!
-    public String getHTMLForSignature(ConsentSignature signature) {
+    public String getHTMLForSignature(ConsentSignature signature)  {
+
+        StringBuilder bodyBuilder = new StringBuilder();
+
+        String hr = "<hr align='left' width='100%' style='height:1px; border:none; color:#000; background-color:#000; margin-top: -10px; margin-bottom: 0px;' />";
+        String signatureElementWrapper =  "<p><br/><div class='sigbox'><div class='inbox'>%1$s</div></div>%2$s%3$s</p>";
+
+        Boolean addedSig = false;
+
+        ArrayList<String> signatureElements = new ArrayList<>();
+
+        String title = signature.getTitle();
+        assert title != null;
+
+        //Signature
+        if (signature.requiresName() || signature.getFullName() != null) {
+            addedSig = true;
+
+            String nameString;
+            if (signature.getFullName() != null) {
+                nameString = signature.getFullName();
+            }
+            else {
+                nameString = "&nbsp;";
+            }
+
+            String titleFormat = "%1$s's Name (printed)";
+            String titleElement = String.format(titleFormat, signature.getTitle());
+            String fullTitleElement = String.format(signatureElementWrapper, nameString, hr, titleElement);
+
+            signatureElements.add(fullTitleElement);
+
+        }
+
+        //signature image
+        if (signature.requiresSignatureImage() || signature.getSignatureImage() != null) {
+            addedSig = true;
+
+            String imageTag;
+
+            if (signature.getSignatureImage() != null) {
+                String imageFormat = "<img width='100%%' alt='star' src='data:image/png;base64,%1$s' />";
+                imageTag = String.format(imageFormat, signature.getSignatureImage());
+            }
+            else {
+                imageTag = "&nbsp;";
+            }
+
+            String titleFormat = "%1$s's Signature";
+            String titleElement = String.format(titleFormat, signature.getTitle());
+            String signatureImageElement = String.format(signatureElementWrapper, imageTag, hr, titleElement);
+
+            signatureElements.add(signatureImageElement);
+        }
+
+        if (addedSig) {
+
+            String dateElement = "Date";
+            String signatureDate;
+            if (signature.getSignatureDate() != null) {
+                signatureDate = signature.getSignatureDate();
+            }
+            else {
+                signatureDate = "&nbsp;";
+            }
+            String signatureImageElement = String.format(signatureElementWrapper, signatureDate, hr, dateElement);
+
+            signatureElements.add(signatureImageElement);
+        }
+
+        if (signatureElements.size() > 1) {
+            bodyBuilder.append("<div class='grid border'>");
+            for (String element : signatureElements) {
+                String elementFormat = "<div class='col-1-3 border'>%1$s</div>";
+                bodyBuilder.append(String.format(elementFormat, element));
+            }
+        }
+        else if (signatureElements.size() == 1) {
+            String elementFormat = "<div width='200'>%1$s</div>";
+            bodyBuilder.append(String.format(elementFormat, signatureElements.get(0)));
+        }
 
 
-        return "";
+
+
+        return bodyBuilder.toString();
 
     }
 
